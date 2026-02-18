@@ -24,3 +24,14 @@ jobs:
 
       - name: Finish
         run: echo "CI Successful!"
+
+      - name: Send Slack Notification
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        payload: |
+          {
+            "text": "CI/CD Pipeline Result: ${{ job.status }}\nRepo: ${{ github.repository }}\nCommit: ${{ github.sha }}"
+          }
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: always() # This ensures you get a notification even if the build fails!
