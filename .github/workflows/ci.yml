@@ -1,37 +1,26 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  build:
+  build-and-notify:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Show Files
-        run: ls -la
-
-      - name: Simulate Build
-        run: echo "Building project..."
-
-      - name: Simulate Tests
-        run: echo "Tests passed!"
-
-      - name: Finish
-        run: echo "CI Successful!"
+      - name: Build Web App
+        run: echo "Build successful"
 
       - name: Send Slack Notification
-      uses: slackapi/slack-github-action@v1.24.0
-      with:
-        payload: |
-          {
-            "text": "CI/CD Pipeline Result: ${{ job.status }}\nRepo: ${{ github.repository }}\nCommit: ${{ github.sha }}"
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      if: always() # This ensures you get a notification even if the build fails!
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "CI/CD Pipeline Result: ${{ job.status }}\nRepo: ${{ github.repository }}\nCommit: ${{ github.sha }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
